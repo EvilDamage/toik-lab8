@@ -1,5 +1,6 @@
 package com.demo.springboot.rest;
 
+import com.demo.springboot.PeselValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,17 +13,19 @@ public class IdentificationNumberApiController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentificationNumberApiController.class);
 
+
     @CrossOrigin
     @GetMapping(value = "/check-identification-number")
     public ResponseEntity<Void> checkIdentificationNumber(@RequestParam(defaultValue = "") String id) {
         LOGGER.info("--- check identification number: {}", id);
+        PeselValidator pesel = new PeselValidator(id);
 
-        // TODO: Bardzo prosze dokonczyc implementacje walidacji numeru PESEL
-        // TODO: Jesli pesel jest poprawny usluga powinna zwracac kod bledu 200 (OK)
-        // TODO: W przeciwnym wypadku usluga powinna zwracac kod bledu 400 (BAD REQUEST)
-        // TODO: Bardzo prosze unikac implementacji logiki w kontrolerze!
+        if(pesel.isValid()) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
